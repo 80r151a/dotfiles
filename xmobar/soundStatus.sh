@@ -20,4 +20,4 @@ else
 fi
 
 # Result volume value in % or muted
-echo $result
+echo "vol:" $result
