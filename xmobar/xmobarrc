@@ -1,29 +1,48 @@
-Config { font = "xft:Fira Mono:pixelsize=12:antialias=true:hinting=true"
-       , additionalFonts = []
-       , borderColor = "black"
-       , border = TopB
-       , bgColor = "black"
-       , fgColor = "grey"
-       , alpha = 255
-       , position = Top
-       , textOffset = -1
-       , iconOffset = -1
-       , lowerOnStart = True
-       , pickBroadest = False
-       , persistent = False
-       , hideOnStart = False
-       , iconRoot = "."
-       , allDesktops = True
-       , overrideRedirect = True
-       , commands = [ Run Weather "KSTL" ["-t","<tempF>F"] 36000
-                    , Run Cpu ["-L","3","-H","50",
-                               "--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Date "%b %_d %-l:%M %p" "date" 10
-		    , Run Kbd [("us", "ENG"), ("ru", "RUS")]
-		    , Run Com "sh" ["-c", "~/.config/xmonad/xmobar/soundStatus.sh"] "myvolume" 10
+Config { overrideRedirect = False
+       , font     = "xft:iosevka-9"
+       , bgColor  = "#5f5f5f"
+       , fgColor  = "#f8f8f2"
+       , position = TopW L 100
+       , commands =  [ 
+                     Run MultiCpu       
+                        [ "--template" , "CPU> Total: <total>% Core: I:<total0>% II:<total1>% III:<total2>% IV:<total3>%"
+                        , "--Low"      , "10"         -- units: %
+                        , "--High"     , "90"         -- units: %
+                        , "--low"      , "green"
+                        , "--normal"   , "yellow"
+                        , "--high"     , "red"
+                        ] 10
+                    , Run Network "eth0" [] 10
+                    , Run Wireless "wlan0" [ "--template", "WIFI> <ssid> <qualitybar>"] 10
+                    , Run Network "tun0" [ "--template", "<up>", "--", "--up", "<fc=#ff3b3b>ON</fc>" ] 10
+                    , Run Alsa "default" "Master"
+                        [ "--template", " VOL> <volumestatus> "
+                        , "--suffix"  , "True"
+                        , "--"
+                        , "--on", ""
+                        ]
+                    , Run BatteryP ["BAT0"]
+                        ["-t", "BAT> <acstatus>"
+                        , "-L", "10", "-H", "80"
+                        , "-l", "red", "-h", "green"
+                        , "--", "-i", "Charging: <left>%", "-o", "Battery: <left>%"
+                        ] 10
+                    , Run Memory 
+                        ["--template", "MEM> <usedratio>%"
+                        , "-L","19", "-H", "90", "--normal", "yellow"
+                        , "--high", "red", "--low", "green"
+                        ] 10
+                    , Run Swap 
+                        ["--template", "SWAP> <usedratio>%"
+                        , "-L","0", "-H", "90", "--normal", "orange"
+                        , "--high", "red", "--low", "green"
+                        ] 10
+                    , Run Date "%a %Y-%m-%d <fc=#8be9fd>%H:%M</fc>" "date" 10
+                    , Run Kbd [("us", "EN"), ("ru", "RU")]
+                    , Run Locks
+                    , Run XMonadLog
                     ]
-       , sepChar = "%"
+       , sepChar  = "%"
        , alignSep = "}{"
-       , template = " %cpu% | %memory% }{ %KSTL% | %myvolume% | %kbd% | <fc=#ffffff>%date%</fc> "
+       , template = "%XMonadLog% }{ | %multicpu% | %memory% %swap% | %wlan0wi% VPN:%tun0% %eth0% | %alsa:default:Master% | %battery% | %kbd% %locks% | %date% "
        }
