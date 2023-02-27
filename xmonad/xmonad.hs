@@ -9,6 +9,9 @@ import XMonad.Util.Ungrab             (unGrab)
 import XMonad.Layout.Magnifier        (magnifiercz')
 import XMonad.Layout.ThreeColumns     (ThreeCol( ThreeColMid))
 import XMonad.Hooks.EwmhDesktops      (ewmhFullscreen, ewmh)
+import XMonad.Layout.Fullscreen       (fullscreenFull)
+import XMonad.Layout.Spacing          (smartSpacingWithEdge)
+import qualified XMonad.Hooks.ManageDocks as Docks
 
 main :: IO ()
 main = xmonad
@@ -18,14 +21,14 @@ main = xmonad
      $ myConfig
 
 myConfig = def
-    { modMask    = mod4Mask      -- Rebind Mod to the Super key
-    , terminal   = "urxvt"       -- Default terminal
-    , layoutHook = myLayout      -- Use custom layouts
-    , manageHook = myManageHook  -- Match on certain windows
+    { modMask         = mod4Mask      -- Rebind Mod to the Super key
+    , terminal        = "urxvt"       -- Default terminal
+    , layoutHook      = myLayout      -- Use custom layouts
+    , manageHook      = myManageHook  -- Match on certain windows
+    , borderWidth     = 2
     }
   `additionalKeysP`
     [ ("M-S-z", spawn "i3lock" )
-    , ("M-S-C-q",	spawn "xmonad --recompile && xmonad --restart")
     , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" )
     , ("M-f"  , spawn "firefox" )
     ]
@@ -43,13 +46,15 @@ myManageHook = composeAll [ transience', manageWindow, manageOverrides ]
           ]
         isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
 
-myLayout = tiled ||| Mirror tiled ||| Full ||| threeCol
+myLayout = Docks.avoidStruts $ withSpaces tiled ||| withSpaces Mirror tiled ||| fullscreenFull Full ||| withSpaces threeCol
   where
     threeCol = magnifiercz' 1.3 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
     ratio    = 1/2    -- Default proportion of screen occupied by master pane
     delta    = 3/100  -- Percent of screen to increment by when resizing panes
+    withSpaces layout = smartSpacingWithEdge 3 $ layout
+
 
 myXmobarPP :: PP
 myXmobarPP = def
