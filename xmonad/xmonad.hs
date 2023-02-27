@@ -1,20 +1,14 @@
 import XMonad
-
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.StatusBar
-import XMonad.Hooks.StatusBar.PP
-
-import XMonad.Util.EZConfig
-import XMonad.Util.Loggers
-import XMonad.Util.Ungrab
-
-import XMonad.Layout.Magnifier
-import XMonad.Layout.ThreeColumns
-
-import XMonad.Hooks.EwmhDesktops
-
+import XMonad.Hooks.DynamicLog        (ppSep, ppTitleSanitize, ppCurrent, ppHidden, ppHiddenNoWindows, ppUrgent, ppOrder, ppExtras)
+import XMonad.Hooks.ManageHelpers     (isFullscreen, doFullFloat, isDialog, isInProperty, transience', composeOne, (-?>))
+import XMonad.Hooks.StatusBar         (withEasySB, statusBarProp, defToggleStrutsKey)
+import XMonad.Hooks.StatusBar.PP      (PP, xmobarStrip, xmobarColor, xmobarBorder, xmobarRaw, shorten, wrap)
+import XMonad.Util.EZConfig           (additionalKeysP)
+import XMonad.Util.Loggers            (logTitles)
+import XMonad.Util.Ungrab             (unGrab)
+import XMonad.Layout.Magnifier        (magnifiercz')
+import XMonad.Layout.ThreeColumns     (ThreeCol( ThreeColMid))
+import XMonad.Hooks.EwmhDesktops      (ewmhFullscreen, ewmh)
 
 main :: IO ()
 main = xmonad
@@ -30,9 +24,10 @@ myConfig = def
     , manageHook = myManageHook  -- Match on certain windows
     }
   `additionalKeysP`
-    [ ("M-S-z", spawn "i3lock")
-    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png"        )
-    , ("M-f"  , spawn "firefox"                   )
+    [ ("M-S-z", spawn "i3lock" )
+    , ("M-S-C-q",	spawn "xmonad --recompile && xmonad --restart")
+    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" )
+    , ("M-f"  , spawn "firefox" )
     ]
 
 myManageHook = composeAll [ transience', manageWindow, manageOverrides ]
