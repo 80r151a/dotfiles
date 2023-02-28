@@ -7,7 +7,7 @@ import XMonad.Util.EZConfig           (additionalKeysP)
 import XMonad.Util.Loggers            (logTitles)
 import XMonad.Util.Ungrab             (unGrab)
 import XMonad.Layout.Magnifier        (magnifiercz')
-import XMonad.Layout.ThreeColumns     (ThreeCol( ThreeColMid))
+import XMonad.Layout.ThreeColumns     (ThreeCol(ThreeColMid))
 import XMonad.Hooks.EwmhDesktops      (ewmhFullscreen, ewmh)
 import XMonad.Layout.Fullscreen       (fullscreenFull)
 import XMonad.Layout.Spacing          (smartSpacingWithEdge)
@@ -46,10 +46,10 @@ myManageHook = composeAll [ transience', manageWindow, manageOverrides ]
           ]
         isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
 
-myLayout = Docks.avoidStruts $ withSpaces tiled ||| withSpaces Mirror tiled ||| fullscreenFull Full ||| withSpaces threeCol
+myLayout = Docks.avoidStruts $ tiled ||| Mirror tiled ||| fullscreenFull Full ||| threeCol
   where
-    threeCol = magnifiercz' 1.3 $ ThreeColMid nmaster delta ratio
-    tiled    = Tall nmaster delta ratio
+    threeCol =  withSpaces $ magnifiercz' 1.3 $ ThreeColMid nmaster delta ratio
+    tiled    = withSpaces $ Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
     ratio    = 1/2    -- Default proportion of screen occupied by master pane
     delta    = 3/100  -- Percent of screen to increment by when resizing panes
