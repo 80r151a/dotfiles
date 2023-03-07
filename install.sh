@@ -49,7 +49,7 @@ libXssDevPack=libXss-devel
 xcompmgrPack=xcompmgr
 
 # Xmobar - minimalistic text based status bar
-xmonadPack=xmobar
+xmobarPack=xmobar
 
 # Directory with downloaded dotfiles repository
 dirDotfiles=$HOME/dotfiles
@@ -64,7 +64,7 @@ dirXmobar=$HOME/.config/xmobar/
 ## PREPARATION ##
 
 # Installing the required packages
-sudo $installPM $xorgPack $xinitPack $makePack $gccPack $ghcPack $libX11DevPack $libXftDevPack $libXineramaDevPack $libXrandrDevPack $libXssDevPauck $xcompmgrPack $xmonadPack
+sudo $installPM $xorgPack $xinitPack $makePack $gccPack $ghcPack $libX11DevPack $libXftDevPack $libXineramaDevPack $libXrandrDevPack $libXssDevPauck $xcompmgrPack $xmobarPack
 
 # Creating directories for Xmonad and xmobar configurations
 mkdir $dirXmonad $dirXmobar
