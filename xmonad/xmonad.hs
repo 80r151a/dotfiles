@@ -47,7 +47,7 @@ myConfig = def
   `additionalKeysP`
     [ ("M-S-z", spawn "env XSECURELOCK_SAVER=saver_xscreensaver xsecurelock" ) -- run xsecurelock locker using shortcut (XSECURELOCK_SAVER in environment indicates use of xscreensaver screen saver)
     , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" ) -- screenshot of the specified area by shortcut
-    , ("M-с"  , spawn "chromium" ) -- launch chromium by shortcut
+    , ("M-c"  , spawn "chromium" ) -- launch chromium by shortcut
     ]
 
 -------------------------------------
