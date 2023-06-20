@@ -35,18 +35,19 @@ main = xmonad
 -------------------------------------
 
 myConfig = def
-    { modMask             = mod4Mask                        -- Rebind Mod to the Super key
-    , terminal            = "urxvt"                         -- Default terminal
-    , layoutHook          = myLayout                        -- Use custom layouts
-    , manageHook          = myManageHook                    -- Match on certain windows
-    , borderWidth         = 2
-    , logHook             = fadeWindowsLogHook myFadeHook
-    , handleEventHook     = fadeWindowsEventHook
+    { modMask             = mod4Mask                        -- rebind Mod to the Super key
+    , terminal            = "urxvt"                         -- default terminal
+    , startupHook         = myStartupHook                   -- custom hook for spawning processes during WM startup
+    , layoutHook          = myLayout                        -- custom layouts
+    , manageHook          = myManageHook                    -- custom hook to work with some windows
+    , borderWidth         = 2                               -- spacing between tiles
+    , logHook             = fadeWindowsLogHook myFadeHook   -- custom hook for working with window composer
+    , handleEventHook     = fadeWindowsEventHook            -- also a hook for the window composer to work
     }
   `additionalKeysP`
-    [ ("M-S-z", spawn "i3lock" )
-    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" )
-    , ("M-f"  , spawn "firefox" )
+    [ ("M-S-z", spawn "env XSECURELOCK_SAVER=saver_xscreensaver xsecurelock" ) -- run xsecurelock locker using shortcut (XSECURELOCK_SAVER in environment indicates use of xscreensaver screen saver)
+    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" ) -- screenshot of the specified area by shortcut
+    , ("M-с"  , spawn "chromium" ) -- launch chromium by shortcut
     ]
 
 -------------------------------------
@@ -59,7 +60,12 @@ myConfig = def
 
 myStartupHook :: X ()
 myStartupHook = do
-  spawn "xcompmgr -c &"
+  spawn "picom -b" -- launch standalone composer
+
+  -- trigger xsecurelock locker on systend and DPMS events
+  spawn "xss-lock -l -- env XSECURELOCK_SAVER=saver_xscreensaver xsecurelock &"
+  spawn "xset s on"      -- enable screensaver via xset
+  spawn "xset s 90 90"   -- auto-lock on timeout
 
 -------------------------------------
 -- Compositing hooks 
@@ -83,7 +89,7 @@ myManageHook = composeAll [ transience', manageWindow, manageOverrides ]
 --- FadeHook with which inactive tiles become transparent
 myFadeHook :: Query Opacity
 myFadeHook = composeAll [                 opaque
-                        , isUnfocused --> transparency 0.12
+                        , isUnfocused --> transparency 0.13
                         ]
 -------------------------------------
 -- Status bar hooks
