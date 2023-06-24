@@ -45,9 +45,9 @@ myConfig = def
     , handleEventHook     = fadeWindowsEventHook            -- also a hook for the window composer to work
     }
   `additionalKeysP`
-    [ ("M-S-z", spawn "env XSECURELOCK_SAVER=saver_xscreensaver xsecurelock" ) -- run xsecurelock locker using shortcut (XSECURELOCK_SAVER in environment indicates use of xscreensaver screen saver)
-    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" ) -- screenshot of the specified area by shortcut
-    , ("M-c"  , spawn "chromium" ) -- launch chromium by shortcut
+    [ ("M-S-z", spawn "loginctl lock-session" )                                      -- launch locker by shortcut
+    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" )   -- screenshot of the specified area by shortcut
+    , ("M-c"  , spawn "chromium" )                                                   -- launch chromium by shortcut
     ]
 
 -------------------------------------
@@ -60,12 +60,13 @@ myConfig = def
 
 myStartupHook :: X ()
 myStartupHook = do
-  spawn "picom -b" -- launch standalone composer
 
-  -- trigger xsecurelock locker on systend and DPMS events
+  -- locker activation (in this case xsecurelock with the xscreenserver screensaver module) on systemd and DPMS events
   spawn "xss-lock -l -- env XSECURELOCK_SAVER=saver_xscreensaver xsecurelock &"
-  spawn "xset s on"      -- enable screensaver via xset
-  spawn "xset s 90 90"   -- auto-lock on timeout
+
+  spawn "xset s on"                                       -- enable screensaver via xset
+  spawn "xset s 90 90"                                    -- auto-lock on timeout
+  spawn "picom --config .config/picom/picom.conf &"       -- run standalone composer with config
 
 -------------------------------------
 -- Compositing hooks 
