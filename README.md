@@ -7,7 +7,7 @@
 * monitor-switch - Screen hotplugging (self-written bash script)
 * xsecurelock & xscreensave - Screen Locker
 * feh - Image viewer as well as desktop background control for window managers
-* scrot - Screenshots
+* maim - Screenshots
 * urxvt - Terminal emulator
 * ranger - File manager
 * picom - Composite window manager

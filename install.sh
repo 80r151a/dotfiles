@@ -46,7 +46,16 @@ libXrandrDevPack=libXrandr-devel
 libXssDevPack=libXss-devel
 
 # Compositing manager for X servers
-xcompmgrPack=xcompmgr
+composerPack=picom
+
+# Screenshot utility
+screenshotPack=maim
+
+# Screen lock utility
+lockPack=xsecurelock
+
+# Extensible screen saver framework
+screensaverPack=xscreensaver
 
 # Xmobar - minimalistic text based status bar
 xmobarPack=xmobar
@@ -64,7 +73,7 @@ dirXmobar=$HOME/.config/xmobar/
 ## PREPARATION ##
 
 # Installing the required packages
-sudo $installPM $xorgPack $xinitPack $makePack $gccPack $ghcPack $libX11DevPack $libXftDevPack $libXineramaDevPack $libXrandrDevPack $libXssDevPauck $xcompmgrPack $xmobarPack
+sudo $installPM $xorgPack $xinitPack $makePack $gccPack $ghcPack $libX11DevPack $libXftDevPack $libXineramaDevPack $libXrandrDevPack $libXssDevPauck $composerPack $lockPack $screenshotPack$screensaverPack $xmobarPack
 
 # Creating directories for Xmonad and xmobar configurations
 mkdir $dirXmonad $dirXmobar

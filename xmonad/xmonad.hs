@@ -46,7 +46,7 @@ myConfig = def
     }
   `additionalKeysP`
     [ ("M-S-z", spawn "loginctl lock-session" )                                      -- launch locker by shortcut
-    , ("M-C-s", unGrab *> spawn "scrot -s ~/Pictures/screenshots/screenshot.png" )   -- screenshot of the specified area by shortcut
+    , ("M-C-s", unGrab *> spawn "maim -s ~/Pictures/screenshots/screenshot_$(date +%F-%T).png" )   -- screenshot of the specified area by shortcut
     , ("M-c"  , spawn "chromium" )                                                   -- launch chromium by shortcut
     ]
 
