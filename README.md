@@ -5,7 +5,7 @@
 * xmonad - Window Manager
 * xmobar - Status bar
 * monitor-switch - Screen hotplugging (self-written bash script)
-* xsecurelock & xscreensave - Screen Locker
+* xsecurelock & xscreensaver - Screen Locker
 * feh - Image viewer as well as desktop background control for window managers
 * maim - Screenshots
 * urxvt - Terminal emulator
