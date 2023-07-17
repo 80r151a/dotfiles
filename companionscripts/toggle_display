@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#
+# Script for udev rule.
+# The script is located in /usr/local/bin/ .
+# Displays video ports with connection status and serial id of connected monitor.
+# In the following format:
+# port_name:connection_status:monitor_serial_ID or "internal" if it is a built-in monitor.
+# Requires hwinfo to work!
+
+
+
+# Collection in an array of serial ID of connected monitors.
+
+# Logic is placed in a function for later passing the output of the function to an array.
+function port_status_output ()
+{
+	date +%s
+        # Loop that iterates over serial ids of connected monitors received from hwinfo.
+        # lenovo laptop built-in monitor no serial number (hwinfo returns 0. No serial ID in edid)
+        # therefore, it checks for compliance with the value 0.
+        for current_id in ${connected_id[@]}; do
+
+                # If the serial number does not match 0, then this is an external connected monitor.
+                if [[ "${current_id}" != "0" ]]; then
+                        # Search for serial id provided by hwinfo in available edid.
+                        # The resulting output contains the port name in the device address in sysfs.
+                        current_port=$(grep -l -w ${current_id} /sys/class/drm/*/edid | cut -d'/' -f5)
+                        status_current_port=$(cat /sys/class/drm/${current_port}/status)
+                        echo "${current_port}:${status_current_port}:${current_id}"
+
+                # If the serial ID corresponds to 0, then this is the laptop's built-in monitor.
+                elif [[ "${current_id}" == "0" ]]; then
+                        # The port for connecting the built-in laptop monitor is known in advance.
+                        status_internal_port=$(cat /sys/class/drm/card0-eDP-1/status)
+                        echo "card0-eDP-1:${status_internal_port}:internal"
+		else
+			#log
+
+                fi
+
+        done
+
+        # Search for ports to which nothing is connected.
+	declare -a disconnected_ports=$(grep disconnected /sys/class/drm/*/status | cut -d'/' -f5,6 | sed 's/\/status:/:/g')
+	for current_disconnected_port in ${disconnected_ports[@]}; do
+		echo "${current_disconnected_port}:none"
+	done
+
+}
+
+id | grep -w 'uid=0' >> /dev/null
+case "$?" in
+"0")
+	declare -a connected_id=$(sudo hwinfo --monitor | grep -w "Serial ID:" | cut -d'"' -f2)
+	
+	port_status_output > /home/borisla/.cache/companionscripts/videoportstatus
+	#echo "${connected_id[@]}" > /home/borisla/.cache/companionscripts/videoportstatus
+;;
+"1")
+	cat /home/borisla/.cache/companionscripts/videoportstatus 
+;;
+*)
+esac
+
